@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -21,7 +20,7 @@ func main() {
 	http.HandleFunc("/post", handlePostRequest)
 	http.HandleFunc("/get", handleGetRequest)
 	fmt.Println("Server is running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	http.ListenAndServe(":8080", nil)
 }
 
 func handlePostRequest(w http.ResponseWriter, r *http.Request) {
