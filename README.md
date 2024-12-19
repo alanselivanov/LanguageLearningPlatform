@@ -29,7 +29,7 @@ Create a .env file in the root directory and configure the necessary environment
 Ensure your database is set up correctly by running:
 npx sequelize-cli db:migrate
 
-tart the Application
+## Start the Application
 npm start
 The application will be accessible at http://localhost:3000.
 
@@ -41,7 +41,6 @@ Take Quizzes: Test your knowledge by participating in quizzes.
 Track Progress: Monitor your learning progress through your user dashboard.
 
 ## Contributing
-
 We welcome contributions to enhance the platform. To contribute:
 Fork the Repository: Click on the 'Fork' button at the top right of this page.
 Create a New Branch: Name your branch descriptively, e.g., feature/add-new-lesson.
@@ -50,11 +49,10 @@ Commit Changes: Write clear and concise commit messages.
 Push to Branch: Push your changes to your forked repository.
 Create a Pull Request: Submit a pull request to the almas-feature branch for review.
 
-Contact
+## Contact
 For inquiries or support, please contact the project maintainer:
 Name: Alan Selivanov
 Email: alan.selivanov@example.com
-Copy code
 
 
 

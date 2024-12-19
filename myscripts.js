@@ -2,12 +2,8 @@ async function createUser() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
-    // Получаем список пользователей, чтобы определить следующий ID
     const response = await fetch('/read');
     const users = await response.json();
-
-    // Сортируем пользователей по ID и находим следующий ID
     const nextId = users.length ? Math.max(...users.map(user => user.id)) + 1 : 1;
 
     const createResponse = await fetch('/create', {
@@ -43,11 +39,9 @@ async function updateUser() {
     const name = prompt('Enter new name:');
     const email = prompt('Enter new email:');
     const password = prompt('Enter new password:');
-
     const response = await fetch('/read');
     const users = await response.json();
     const userExists = users.some(user => user.id === parseInt(id));
-
     if (!userExists) {
         alert('User ID not found!');
         return;
@@ -70,11 +64,9 @@ async function updateUser() {
 
 async function deleteUser() {
     const id = prompt('Enter User ID to delete:');
-    
     const response = await fetch('/read');
     const users = await response.json();
     const userExists = users.some(user => user.id === parseInt(id));
-
     if (!userExists) {
         alert('User ID not found!');
         return;
