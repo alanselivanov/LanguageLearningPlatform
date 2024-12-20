@@ -1,14 +1,46 @@
 async function createUser() {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (!name) {
+        alert('Name is required.');
+        return;
+    }
+    if (name.length < 1) {
+        alert('Name must be at least 1 characters long.');
+        return;
+    }
+    if (!email) {
+        alert('Email is required.');
+        return;
+    }
+    if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)) {
+        alert('Invalid email format.');
+        return;
+    }
+    if (!password) {
+        alert('Password is required.');
+        return;
+    }
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long.');
+        return;
+    }
+
     const response = await fetch('/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
     });
-    const result = await response.json();
-    alert(JSON.stringify(result));
+
+    if (response.ok) {
+        const result = await response.json();
+        alert(`User created successfully: ${JSON.stringify(result)}`);
+    } else {
+        const error = await response.text();
+        alert(`Error creating user: ${error}`);
+    }
 }
 
 async function getUsers() {
@@ -35,9 +67,23 @@ async function updateUser() {
         return;
     }
 
-    const name = prompt('Enter new name:');
-    const email = prompt('Enter new email:');
-    const password = prompt('Enter new password:');
+    const name = prompt('Enter new name (leave blank to keep current):');
+    if (name && name.length < 3) {
+        alert('Name must be at least 3 characters long.');
+        return;
+    }
+
+    const email = prompt('Enter new email (leave blank to keep current):');
+    if (email && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)) {
+        alert('Invalid email format.');
+        return;
+    }
+
+    const password = prompt('Enter new password (leave blank to keep current):');
+    if (password && password.length < 6) {
+        alert('Password must be at least 6 characters long.');
+        return;
+    }
 
     const response = await fetch('/update', {
         method: 'PUT',

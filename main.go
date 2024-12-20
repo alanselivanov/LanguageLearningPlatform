@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -51,10 +52,29 @@ func initDB() {
 	fmt.Println("Database connected and migrated successfully!")
 }
 
+func isValidEmail(email string) bool {
+	regex := `^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$`
+	re := regexp.MustCompile(regex)
+	return re.MatchString(email)
+}
+
 func createUser(w http.ResponseWriter, r *http.Request) {
 	var user User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, "Invalid input data", http.StatusBadRequest)
+		return
+	}
+
+	if user.Name == "" {
+		http.Error(w, "Name is required", http.StatusBadRequest)
+		return
+	}
+	if user.Email == "" {
+		http.Error(w, "Email is required", http.StatusBadRequest)
+		return
+	}
+	if user.Password == "" || len(user.Password) < 6 {
+		http.Error(w, "Password is required and must be at least 6 characters", http.StatusBadRequest)
 		return
 	}
 
@@ -108,6 +128,19 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if user.Name != "" && len(user.Name) < 3 {
+		http.Error(w, "Name must be at least 3 characters long", http.StatusBadRequest)
+		return
+	}
+	if user.Email != "" && !isValidEmail(user.Email) {
+		http.Error(w, "Invalid email format", http.StatusBadRequest)
+		return
+	}
+	if user.Password != "" && len(user.Password) < 6 {
+		http.Error(w, "Password must be at least 6 characters", http.StatusBadRequest)
+		return
+	}
+
 	user.UpdatedAt = time.Now()
 
 	if err := db.Model(&User{}).Where("id = ?", user.ID).Updates(user).Error; err != nil {
@@ -145,6 +178,10 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	initDB()
+
+	fs := http.FileServer(http.Dir("./"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	http.HandleFunc("/create", createUser)
 	http.HandleFunc("/read", getUsers)
 	http.HandleFunc("/readByID", getUserByID)
