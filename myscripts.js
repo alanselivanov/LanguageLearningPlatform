@@ -2,17 +2,12 @@ async function createUser() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const response = await fetch('/read');
-    const users = await response.json();
-    const nextId = users.length ? Math.max(...users.map(user => user.id)) + 1 : 1;
-
-    const createResponse = await fetch('/create', {
+    const response = await fetch('/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: nextId, name, email, password }),
+        body: JSON.stringify({ name, email, password }),
     });
-    
-    const result = await createResponse.json();
+    const result = await response.json();
     alert(JSON.stringify(result));
 }
 
@@ -33,51 +28,33 @@ async function getUsers() {
     output += '</table>';
     document.getElementById('output').innerHTML = output;
 }
-
 async function updateUser() {
     const id = prompt('Enter User ID to update:');
     const name = prompt('Enter new name:');
     const email = prompt('Enter new email:');
     const password = prompt('Enter new password:');
-    const response = await fetch('/read');
-    const users = await response.json();
-    const userExists = users.some(user => user.id === parseInt(id));
-    if (!userExists) {
-        alert('User ID not found!');
-        return;
-    }
-
-    const updateResponse = await fetch('/update', {
+    const response = await fetch('/update', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: parseInt(id), name, email, password }),
     });
 
-    if (updateResponse.ok) {
-        const result = await updateResponse.json();
-        alert(`User updated successfully: ${JSON.stringify(result)}`);
-    } else {
-        const error = await updateResponse.text();
-        alert(`Error updating user: ${error}`);
+    if (response.ok) {
+     const result = await response.json();
+     alert(`User updated successfully: ${JSON.stringify(result)}`);
+  } else {
+       const error = await response.text();
+     alert(`Error updating user: ${error}`);
     }
 }
 
 async function deleteUser() {
     const id = prompt('Enter User ID to delete:');
-    const response = await fetch('/read');
-    const users = await response.json();
-    const userExists = users.some(user => user.id === parseInt(id));
-    if (!userExists) {
-        alert('User ID not found!');
-        return;
-    }
-
-    const deleteResponse = await fetch('/delete', {
+    const response = await fetch('/delete', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: parseInt(id) }),
     });
-
-    const result = await deleteResponse.json();
+    const result = await response.json();
     alert(JSON.stringify(result));
 }
