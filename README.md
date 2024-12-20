@@ -7,7 +7,6 @@
 ## Key Features
 - **User Authentication**: Users can create accounts, log in, and manage their profiles.
 - **CRUD Operations**: Admins and users can perform basic create, read, update, and delete operations on their data.
-- **Progress Tracking**: Track and display basic user progress.
 - **Interactive Interface**: A simple, responsive interface for interacting with the platform’s functionalities.
 
 ## Target Audience
@@ -15,7 +14,7 @@ This platform is intended for individuals interested in learning a new language 
 
 ## Team Members
 - **Selivanov Alan** 
-- **Kussainov Almas**
+- **Kusainov Almas**
 - **Baltabayev Adil**
 
 ## Getting Started
