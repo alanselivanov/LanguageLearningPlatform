@@ -2,10 +2,11 @@
 
 ## Project Overview
 
+
 **Language Learning Platform** is a web-based application designed to facilitate the learning of languages. The platform allows users to engage in basic language learning exercises, with functionalities such as user registration, authentication, and progress tracking.
 
 ## Key Features
-- **User Authentication**: Users can create accounts, log in, and manage their profiles.
+- **Database Integration**: The application is connected to a PostgreSQL database via pgAdmin4 for efficient data management.
 - **CRUD Operations**: Admins and users can perform basic create, read, update, and delete operations on their data.
 - **Interactive Interface**: A simple, responsive interface for interacting with the platform’s functionalities.
 
