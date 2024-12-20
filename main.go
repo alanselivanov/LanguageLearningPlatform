@@ -52,6 +52,29 @@ func initDB() {
 
 	fmt.Println("Successfully connected to the database!")
 }
+func getUserByID(w http.ResponseWriter, r *http.Request) {
+
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		http.Error(w, "ID is required", http.StatusBadRequest)
+		return
+	}
+
+	var user User
+	query := `SELECT id, name, email, password, created_at, updated_at FROM users WHERE id = $1`
+	err := db.QueryRow(query, id).Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			http.Error(w, "User not found", http.StatusNotFound)
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(user)
+}
 
 func createUser(w http.ResponseWriter, r *http.Request) {
 	var user User
@@ -187,6 +210,7 @@ func main() {
 	http.HandleFunc("/read", getUsers)
 	http.HandleFunc("/update", updateUser)
 	http.HandleFunc("/delete", deleteUser)
+	http.HandleFunc("/readByID", getUserByID)
 
 	fmt.Println("Server started on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
