@@ -11,10 +11,12 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             },
             body: JSON.stringify({ name, password })
         });
-
+        
         if (response.ok) {
             const data = await response.json();
-
+            
+            localStorage.setItem('user', JSON.stringify({ name: data.name, role: data.role }));
+            
             if (data.role === 'admin') {
                 window.location.href = '/static/index.html';
             } else {
