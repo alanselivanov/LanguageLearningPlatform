@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/main_page_style.css">
+    <title>Language Learning Platform</title>
+</head>
+<body>
+    <header>
+        <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-success py-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Online Language Learning Platform</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"  >
+                    <span class="navbar-toggler-icon"></span>
+                </button> 
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto" id="nav-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/static/main_page.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/static/courses_page.html">Courses</a>
+                        </li>
+                        <li class="nav-item"></li>
+                            <a class="nav-link" href="/static/login_page.html">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/static/signup_page.html">Sign-up</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="introduction_main_container">
+        <h1 id="header_text">Welcome to Our Online Language Learning Platform</h1>
+            <hr id="header_line">
+        <div class="introduction_container">
+            <div class="introduction_text-content">
+        <section> 
+            <h2>Learn a New Language Today!</h2>
+            <p>Join thousands of learners from around the world and start your language learning journey with us.</p>
+        </section>
+        <figure>
+            <img src="/static/main_page_photos/photo_main1.jpg" alt="People learning a language online" width="400">
+            <figcaption>Join our online community of language learners.</figcaption>
+        </figure>
+        </div>
+        <div class="introduction_image-content">
+            <img class="second_image" src="/static/main_page_photos/photo_main2.png" alt="Language learners around the world">
+        </div>
+    </section>
+
+    <main>
+        <blockquote>
+            "The limits of my language are the limits of my world." — Ludwig Wittgenstein
+        </blockquote>
+        <div class="container">
+            <div class="row ">
+                <section class="col-md-6 Why">
+                    <h2>Why Choose our platform?</h2>
+                    <ul>
+                        <li>User-friendly interface</li>
+                        <li>Simple and understandable training format</li>
+                        <li>Quick Feedback</li>
+                        <li>Frequent updates</li>
+                    </ul>
+                </section>  
+            </div>
+        </div>
+        <div class="container">
+            <div class="row GST">
+                <section class="col-md-6">
+                    <h2>Get Started Today</h2>
+                    <p>Ready to embark on your language learning adventure? Sign up now!</p>
+                </section>
+        
+                <div class="col-md-6 d-flex  align-items-center">
+                    <a href="signup_page.html" class="button">Start Learning Now</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="row FAQ">
+                <section class="col-md-6">
+                    <h2>Frequently Asked Questions (FAQs)</h2>
+                    <dl>
+                        <dt>How do I start learning a new language?</dt>
+                        <dd>You can start by signing up for an account, choosing a language course, and accessing the lessons.</dd>
+        
+                        <dt>Do I need any prior knowledge to start learning?</dt>
+                        <dd>No, our courses are designed for all levels, including beginners. You can start from the basics and work your way up to more advanced topics.</dd>
+        
+                        <dt>Can I learn more than one language at a time?</dt>
+                        <dd>Yes, you can enroll in multiple courses and switch between them as you progress.</dd>
+        
+                        <dt>How do I track my progress?</dt>
+                        <dd>Our platform will include progress tracking tools that allow you to see your performance in each course. (By the next update)</dd>
+        
+                        <dt>Is there a mobile app for learning on-the-go?</dt>
+                        <dd>Not yet, but we are working on developing one in the near future.</dd>
+                    </dl>
+                </section>
+                <section class="col-md-6">
+                    <h2>Any Questions?</h2>
+                    <form>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="name" placeholder="Your Name">
+                            <label for="name">Your Name</label>
+                        </div>
+        
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="Your Email">
+                            <label for="email">Your Email</label>
+                        </div>
+        
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" placeholder="Your Question" id="message" style="height: 150px"></textarea>
+                            <label for="message">Your Question</label>
+                        </div>
+        
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                <input type="submit" value="Submit Question" class="btn btn-success w-100">
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-success text-white text-center py-3 mt-4">
+        <div class="container">
+            <p>Contact us:</p>
+            <p>alan.selivanov.mail@gmail.com</p>
+            <p>husainovalmas@gmail.com</p>
+        </div>
+    </footer>
+    <script src="/static/main_page_FAQ.js"></script>
+    <script src="/static/myscripts.js"></script>
+</body>
+</html>

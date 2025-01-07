@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+.introduction_container{
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.introduction_main_container{
+    background-color: #6ac585;
+    color: white;
+    padding: 50px 0;
+    max-width: 100vw;
+    padding-top: 2rem;
+}
+.introduction_text-content {
+    flex: 1;
+    padding-right: 40px;
+}
+.introduction_image-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.second_image{
+    max-width: 75%;
+    max-height: 75%;
+}
+#header_text{
+    text-align: center;
+    font-size: 2.125rem;
+}
+blockquote {
+    font-size: 1.2em;
+    margin: 20px 0;
+    padding-left: 20px;
+    color: #555;
+}
+.button {
+    display: inline-block; 
+    background-color: #4CAF50; 
+    color: white; 
+    padding: 10px 20px; 
+    text-decoration: none; 
+    border-radius: 5px;
+}
+figure {
+    margin: 0;
+}
+figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid #000000;
+}
+figcaption {
+    margin-top: 10px;
+    font-style: italic;
+    color: #ffffff;
+}
+a{
+    text-decoration: none;
+    color:white;
+}
+a:hover{
+    color:white;
+}
+.FAQ{
+    padding:10px 5px;
+}
+.GST{
+    padding:10px 5px;
+}
+

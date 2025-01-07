@@ -2,6 +2,7 @@ async function createUser() {
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
+    const role = document.getElementById('role').value.trim().toLowerCase();
 
     if (!name) {
         alert('Name is required.');
@@ -27,11 +28,14 @@ async function createUser() {
         alert('Password must be at least 6 characters long.');
         return;
     }
-
+    if (!role || (role !== "user" && role !== "admin")) {
+        alert('Role is required and must be either "user" or "admin".');
+        return;
+    }
     const response = await fetch('/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, role }),
     });
 
     if (response.ok) {
@@ -46,13 +50,14 @@ async function createUser() {
 async function getUsers() {
     const response = await fetch('/read');
     const users = await response.json();
-    let output = '<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Created At</th><th>Updated At</th></tr>';
+    let output = '<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Role</th><th>Created At</th><th>Updated At</th></tr>';
     users.forEach(user => {
         output += `<tr>
             <td>${user.id}</td>
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${user.password}</td>
+            <td>${user.role}</td>
             <td>${user.created_at}</td>
             <td>${user.updated_at}</td>
         </tr>`;
@@ -60,6 +65,7 @@ async function getUsers() {
     output += '</table>';
     document.getElementById('output').innerHTML = output;
 }
+
 async function updateUser() {
     const id = prompt('Enter User ID to update:');
     if (!id || isNaN(id) || parseInt(id) <= 0) {
@@ -85,10 +91,16 @@ async function updateUser() {
         return;
     }
 
+    const role = prompt('Enter new role (user/admin, leave blank to keep current):');
+    if (role && (role !== "user" && role !== "admin")) {
+        alert('Role must be either "user" or "admin".');
+        return;
+    }
+
     const response = await fetch('/update', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: parseInt(id), name, email, password }),
+        body: JSON.stringify({ id: parseInt(id), name, email, password, role }),
     });
 
     if (response.ok) {
@@ -131,12 +143,13 @@ async function getUserByID() {
     const response = await fetch(`/readByID?id=${id}`);
     if (response.ok) {
         const user = await response.json();
-        let output = `<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Created At</th><th>Updated At</th></tr>`;
+        let output = `<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Role</th><th>Created At</th><th>Updated At</th></tr>`;
         output += `<tr>
             <td>${user.id}</td>
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${user.password}</td>
+            <td>${user.role}</td>
             <td>${user.created_at}</td>
             <td>${user.updated_at}</td>
         </tr>`;
