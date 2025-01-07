@@ -1,17 +1,19 @@
 async function createUser() {
     try {
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
+        const name = document.getElementById('name')?.value.trim();
+        const email = document.getElementById('email')?.value.trim();
+        const password = document.getElementById('password')?.value.trim();
+        const role = document.getElementById('role')?.value.trim().toLowerCase();
 
         if (!name) throw new Error('Name is required.');
         if (!email || !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)) throw new Error('Invalid email format.');
         if (!password || password.length < 6) throw new Error('Password must be at least 6 characters long.');
+        if (!role || (role !== "user" && role !== "admin")) throw new Error('Should be admin or user.');
 
         const response = await fetch('/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify({ name, email, password, role }),
         });
 
         if (!response.ok) {
@@ -28,7 +30,9 @@ async function createUser() {
     }
 }
 
+
 async function getUsers() {
+
     try {
         const response = await fetch('/read');
         if (!response.ok) throw new Error('Failed to fetch users.');
@@ -52,6 +56,24 @@ async function getUsers() {
         await reportClientError(err.message, 'getUsers', null, null, err.stack || null);
         alert(`Failed to fetch users: ${err.message}`);
     }
+
+    const response = await fetch('/read');
+    const users = await response.json();
+    let output = '<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Role</th><th>Created At</th><th>Updated At</th></tr>';
+    users.forEach(user => {
+        output += `<tr>
+            <td>${user.id}</td>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.password}</td>
+            <td>${user.role}</td>
+            <td>${user.created_at}</td>
+            <td>${user.updated_at}</td>
+        </tr>`;
+    });
+    output += '</table>';
+    document.getElementById('output').innerHTML = output;
+
 }
 
 async function updateUser() {
@@ -68,16 +90,20 @@ async function updateUser() {
         const password = prompt('Enter new password (leave blank to keep current):');
         if (password && password.length < 6) throw new Error('Password must be at least 6 characters long.');
 
-        const response = await fetch('/update', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: parseInt(id), name, email, password }),
-        });
 
-        if (!response.ok) {
-            const error = await response.text();
-            throw new Error(`Error updating user: ${error}`);
-        }
+        
+
+    const role = prompt('Enter new role (user/admin, leave blank to keep current):');
+    if (role && (role !== "user" && role !== "admin")) {
+        alert('Role must be either "user" or "admin".');
+        return;
+    }
+
+    const response = await fetch('/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id), name, email, password, role }),
+    });
 
         const result = await response.json();
         alert(`User updated successfully: ${JSON.stringify(result)}`);
@@ -125,12 +151,13 @@ async function getUserByID() {
         }
 
         const user = await response.json();
-        let output = `<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Created At</th><th>Updated At</th></tr>`;
+        let output = `<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Role</th><th>Created At</th><th>Updated At</th></tr>`;
         output += `<tr>
             <td>${user.id}</td>
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${user.password}</td>
+            <td>${user.role}</td>
             <td>${user.created_at}</td>
             <td>${user.updated_at}</td>
         </tr>`;
@@ -142,6 +169,7 @@ async function getUserByID() {
         alert(`Failed to fetch user by ID: ${err.message}`);
     }
 }
+
 
 async function reportClientError(errorMessage, source, line, column, stack) {
     const errorDetails = {
