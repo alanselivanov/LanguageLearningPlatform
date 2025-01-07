@@ -107,22 +107,26 @@
                 </section>
                 <section class="col-md-6">
                     <h2>Any Questions?</h2>
-                    <form>
+                    <form id="supportForm" enctype="multipart/form-data">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="name" placeholder="Your Name">
+                            <input type="text" class="form-control" id="name" placeholder="Your Name" name="name">
                             <label for="name">Your Name</label>
                         </div>
         
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" placeholder="Your Email">
+                            <input type="email" class="form-control" id="email" placeholder="Your Email" name="email">
                             <label for="email">Your Email</label>
                         </div>
         
                         <div class="form-floating mb-3">
-                            <textarea class="form-control" placeholder="Your Question" id="message" style="height: 150px"></textarea>
+                            <textarea class="form-control" placeholder="Your Question" id="message" style="height: 150px" name="message"></textarea>
                             <label for="message">Your Question</label>
                         </div>
-        
+                        
+                        <div class="form-floating mb-3">
+                            <input type="file" class="form-control" id="file" name="file">
+                        </div>
+
                         <div class="form-row align-items-center">
                             <div class="col-auto">
                                 <input type="submit" value="Submit Question" class="btn btn-success w-100">
@@ -143,5 +147,6 @@
     </footer>
     <script src="/static/main_page_FAQ.js"></script>
     <script src="/static/myscripts.js"></script>
+    <script src="/static/main_helpdesk.js"></script>
 </body>
 </html>
