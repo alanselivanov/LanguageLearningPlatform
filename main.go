@@ -293,9 +293,8 @@ func main() {
 	mux.HandleFunc("/readByID", getUserByID)
 	mux.HandleFunc("/update", updateUser)
 	mux.HandleFunc("/delete", deleteUser)
-	mux.HandleFunc("/", serveIndex)
 	mux.HandleFunc("/log-error", logClientError)
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./"))))
+	mux.HandleFunc("/", serveIndex)
 
 	logger.Info("Server started on :8080")
 	log.Fatal(http.ListenAndServe(":8080", rateLimiterMiddleware(mux)))
