@@ -1,5 +1,6 @@
 # Language Learning Platform
 
+<<<<<<< HEAD
 ## Project Overview
 
 
@@ -64,3 +65,5 @@ Follow these instructions to get the Language Learning Platform running on your 
 ## Future Enhancements
 - Extend the platform with additional features like quizzes, progress tracking, and personalized learning goals.
 - Enhance the UI for a more engaging and user-friendly experience.
+=======
+>>>>>>> b7f04e82dac0a3753a3fc8c57c08c889fd59c2a8
