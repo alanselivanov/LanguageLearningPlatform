@@ -32,10 +32,20 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type Product struct {
+	ID              uint      `json:"id" gorm:"primaryKey"`
+	Name            string    `json:"name"`
+	Description     string    `json:"description"`
+	Price           float64   `json:"price"`
+	Characteristics string    `json:"characteristics"`
+	Date            time.Time `json:"date"`
+	Image           string    `json:"image"`
+}
+
 var (
 	db      *gorm.DB
 	logger  *logrus.Logger
-	limiter = rate.NewLimiter(1, 3)
+	limiter = rate.NewLimiter(30, 60)
 )
 
 func initLogger() {
@@ -407,6 +417,45 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "main_page.html")
 }
 
+func createProduct(w http.ResponseWriter, r *http.Request) {
+	var product struct {
+		Name            string  `json:"name"`
+		Description     string  `json:"description"`
+		Price           float64 `json:"price"`
+		Characteristics string  `json:"characteristics"`
+		Date            string  `json:"date"`
+		Image           string  `json:"image"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&product); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	parsedDate, err := time.Parse("2006-01-02", product.Date)
+	if err != nil {
+		http.Error(w, "Invalid date format. Use YYYY-MM-DD.", http.StatusBadRequest)
+		return
+	}
+
+	newProduct := Product{
+		Name:            product.Name,
+		Description:     product.Description,
+		Price:           product.Price,
+		Characteristics: product.Characteristics,
+		Date:            parsedDate,
+		Image:           product.Image,
+	}
+
+	if err := db.Create(&newProduct).Error; err != nil {
+		http.Error(w, "Failed to save product", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(newProduct)
+}
+
 func main() {
 	initLogger()
 	initDB()
@@ -420,9 +469,11 @@ func main() {
 	mux.HandleFunc("/delete", deleteUser)
 	mux.HandleFunc("/log-error", logClientError)
 	mux.HandleFunc("/send-support-ticket", sendSupportTicket)
-	mux.HandleFunc("/", mainPage)
-	http.HandleFunc("/admin", admin)
 
+	mux.HandleFunc("/create-product", createProduct)
+	mux.HandleFunc("/admin", admin)
+	mux.HandleFunc("/", mainPage)
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./"))))
 	logger.Info("Server started on :8080")
 	log.Fatal(http.ListenAndServe(":8080", rateLimiterMiddleware(mux)))
 

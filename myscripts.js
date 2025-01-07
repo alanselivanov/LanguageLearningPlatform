@@ -4,12 +4,30 @@ async function createUser() {
         const email = document.getElementById('email')?.value.trim();
         const password = document.getElementById('password')?.value.trim();
         const role = document.getElementById('role')?.value.trim().toLowerCase();
-
-        if (!name) throw new Error('Name is required.');
-        if (!email || !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)) throw new Error('Invalid email format.');
-        if (!password || password.length < 6) throw new Error('Password must be at least 6 characters long.');
-        if (!role || (role !== "user" && role !== "admin")) throw new Error('Should be admin or user.');
-
+        if (!name) {
+            alert('Name is required.');
+            return;
+        }
+        if (name.length < 1) {
+            alert('Name must be at least 1 characters long.');
+            return;
+        }
+        if (!email) {
+            alert('Email is required.');
+            return;
+        }
+        if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)) {
+            alert('Invalid email format.');
+            return;
+        }
+        if (!password) {
+            alert('Password is required.');
+            return;
+        }
+        if (password.length < 6) {
+            alert('Password must be at least 6 characters long.');
+            return;
+        }
         const response = await fetch('/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -167,6 +185,91 @@ async function getUserByID() {
         console.error('Error in getUserByID:', err);
         await reportClientError(err.message, 'getUserByID', null, null, err.stack || null);
         alert(`Failed to fetch user by ID: ${err.message}`);
+    }
+}
+async function loadSampleData() {
+    try {
+        const sampleData = [
+            { name: "Product 1", description: "Description of Product 1", price: 100, characteristics: "Feature A", date: "2025-01-01", image: "image1.jpg" },
+            { name: "Product 2", description: "Description of Product 2", price: 200, characteristics: "Feature B", date: "2025-01-02", image: "image2.jpg" },
+            // Добавьте еще минимум 28 объектов
+        ];
+
+        for (const item of sampleData) {
+            const response = await fetch('/create-product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(item),
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(`Error loading item: ${error}`);
+            }
+        }
+
+        alert("Sample data successfully loaded!");
+    } catch (err) {
+        console.error('Error in loadSampleData:', err);
+        alert(`Failed to load data: ${err.message}`);
+    }
+}
+async function fetchAndDisplayProducts() {
+    try {
+        const response = await fetch('https://fakestoreapi.com/products');
+        if (!response.ok) throw new Error('Failed to fetch products.');
+
+        const products = await response.json();
+        let output = '<table border="1"><tr><th>ID</th><th>Title</th><th>Price</th><th>Description</th><th>Category</th></tr>';
+        products.forEach(product => {
+            output += `<tr>
+                <td>${product.id}</td>
+                <td>${product.title}</td>
+                <td>${product.price}</td>
+                <td>${product.description}</td>
+                <td>${product.category}</td>
+            </tr>`;
+        });
+        output += '</table>';
+
+        document.getElementById('products-output').innerHTML = output;
+    } catch (err) {
+        console.error('Error in fetchAndDisplayProducts:', err);
+        alert(`Failed to fetch products: ${err.message}`);
+    }
+}
+async function generateFakeUsers() {
+    try {
+        const fakeUsers = [];
+        const numberOfUsers = 30; 
+
+        for (let i = 1; i <= numberOfUsers; i++) {
+            const user = {
+                name: `User${i} Name`,
+                email: `user${i}@example.com`,
+                password: `password${i}`,
+                role: 'user', 
+            };
+            fakeUsers.push(user);
+        }
+
+        for (const user of fakeUsers) {
+            const response = await fetch('/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user),
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(`Failed to create user: ${error}`);
+            }
+        }
+
+        alert(`${numberOfUsers} fake users generated successfully!`);
+    } catch (err) {
+        console.error('Error in generateFakeUsers:', err);
+        alert(`Failed to generate users: ${err.message}`);
     }
 }
 
