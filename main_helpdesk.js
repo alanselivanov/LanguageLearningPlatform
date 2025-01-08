@@ -32,7 +32,7 @@ window.onload = function() {
     
     if (user) {
         document.getElementById('login-btn').innerText = 'Logout';
-        //document.getElementById('profile-btn').innerText = 'Sign-up';
+        document.getElementById('profile-btn').innerText = 'Profile';
 
         document.getElementById('login-btn').onclick = function(e) {
             e.preventDefault(); 
@@ -40,10 +40,10 @@ window.onload = function() {
             window.location.href = '/static/login_page.html';
         };
 
-        //document.getElementById('profile-btn').onclick = function(e) {
-            //e.preventDefault();
-            //window.location.href = '/static/profile.html';
-        //};
+        document.getElementById('profile-btn').onclick = function(e) {
+            e.preventDefault();
+            window.location.href = '/static/profile_page.html';
+        };
     } else {
         document.getElementById('login-btn').innerText = 'Login';
         document.getElementById('profile-btn').innerText = 'Sign-up';

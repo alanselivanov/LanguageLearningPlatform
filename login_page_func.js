@@ -15,8 +15,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             const data = await response.json();
             
-            localStorage.setItem('user', JSON.stringify({ name: data.name, role: data.role }));
-            
+            localStorage.setItem('user', JSON.stringify({ id: data.id, name: data.name, role: data.role }));
+            console.log(localStorage.getItem('user'))
             if (data.role === 'admin') {
                 window.location.href = '/static/index.html';
             } else {

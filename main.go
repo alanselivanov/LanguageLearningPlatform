@@ -225,6 +225,27 @@ func getUserByID(w http.ResponseWriter, r *http.Request) {
 		"user": user,
 	})
 }
+func getUserByIDProf(w http.ResponseWriter, r *http.Request) {
+	idStr := r.URL.Query().Get("id")
+	if idStr == "" {
+		http.Error(w, "ID is required", http.StatusBadRequest)
+		return
+	}
+
+	var id uint
+	if _, err := fmt.Sscanf(idStr, "%d", &id); err != nil {
+		http.Error(w, "Invalid ID format", http.StatusBadRequest)
+		return
+	}
+
+	var user User
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(w).Encode(user)
+}
 
 func updateUser(w http.ResponseWriter, r *http.Request) {
 	var user User
@@ -327,9 +348,10 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := map[string]string{
+	response := map[string]interface{}{
 		"message": "Login successful",
 		"role":    user.Role,
+		"id":      user.ID,
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -473,6 +495,7 @@ func main() {
 	mux.HandleFunc("/create", createUser)
 	mux.HandleFunc("/read", getUsers)
 	mux.HandleFunc("/readByID", getUserByID)
+	mux.HandleFunc("/readByIDprof", getUserByIDProf)
 	mux.HandleFunc("/update", updateUser)
 	mux.HandleFunc("/delete", deleteUser)
 	mux.HandleFunc("/log-error", logClientError)

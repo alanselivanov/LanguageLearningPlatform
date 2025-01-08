@@ -216,6 +216,7 @@ async function loadSampleData() {
 async function fetchAndDisplayProducts() {
     try {
         const response = await fetch('https://fakestoreapi.com/products');
+        console.log(response.status)
         if (!response.ok) throw new Error('Failed to fetch products.');
 
         const products = await response.json();
