@@ -504,6 +504,36 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newProduct)
 }
 
+func filterUsers(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	email := r.URL.Query().Get("email")
+
+	var users []User
+	query := db.Model(&User{})
+
+	if name != "" {
+		query = query.Where("name ILIKE ?", "%"+name+"%")
+	}
+	if email != "" {
+		query = query.Where("email ILIKE ?", "%"+email+"%")
+	}
+
+	if err := query.Find(&users).Error; err != nil {
+		handleError(w, "filterUsers", fmt.Errorf("error filtering users: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+	logUserAction("filterUsers", "success", map[string]interface{}{
+		"filters": map[string]string{
+			"name":  name,
+			"email": email,
+		},
+		"count": len(users),
+	})
+}
+
 func mainPage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "main_page.html")
 }
@@ -522,6 +552,7 @@ func main() {
 	mux.HandleFunc("/delete", deleteUser)
 	mux.HandleFunc("/log-error", logClientError)
 	mux.HandleFunc("/send-support-ticket", sendSupportTicket)
+	mux.HandleFunc("/filter", filterUsers)
 	mux.HandleFunc("/create-product", createProduct)
 	mux.HandleFunc("/admin", admin)
 	mux.HandleFunc("/", mainPage)

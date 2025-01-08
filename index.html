@@ -29,6 +29,13 @@
     <button onclick="fetchAndDisplayProducts()">Fetch and Display Products</button>
     <div id="products-output"></div>
     <button onclick="generateFakeUsers()">Generate Fake Users</button>
+    <div>
+        <input type="text" id="filterName" placeholder="Filter by Name">
+        <input type="text" id="filterEmail" placeholder="Filter by Email">
+        <button onclick="filterUsers()">Apply Filters</button>
+    </div>
+    <div id="filterOutput"></div>
+    
 
     <script src="/static/myscripts.js"></script>
 </body>

@@ -269,6 +269,36 @@ async function generateFakeUsers() {
     }
 }
 
+async function filterUsers() {
+    const name = document.getElementById('filterName').value.trim();
+    const email = document.getElementById('filterEmail').value.trim();
+
+    try {
+        const params = new URLSearchParams();
+        if (name) params.append("name", name);
+        if (email) params.append("email", email);
+
+        const response = await fetch(`/filter?${params.toString()}`);
+        if (!response.ok) throw new Error('Failed to fetch filtered users.');
+
+        const users = await response.json();
+        let output = '<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Created At</th><th>Updated At</th></tr>';
+        users.forEach(user => {
+            output += `<tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.created_at}</td>
+                <td>${user.updated_at}</td>
+            </tr>`;
+        });
+        output += '</table>';
+        document.getElementById('filterOutput').innerHTML = output;
+    } catch (err) {
+        console.error('Error in filterUsers:', err);
+        alert(`Failed to apply filters: ${err.message}`);
+    }
+}
 
 async function reportClientError(errorMessage, source, line, column, stack) {
     const errorDetails = {
