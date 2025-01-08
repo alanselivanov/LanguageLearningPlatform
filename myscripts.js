@@ -300,6 +300,37 @@ async function filterUsers() {
     }
 }
 
+async function sortUsers() {
+    const sortField = document.getElementById('sortField').value;
+    const sortOrder = document.getElementById('sortOrder').value;
+
+    try {
+        const params = new URLSearchParams();
+        params.append("field", sortField);
+        params.append("order", sortOrder);
+
+        const response = await fetch(`/sort?${params.toString()}`);
+        if (!response.ok) throw new Error('Failed to fetch sorted users.');
+
+        const users = await response.json();
+        let output = '<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Created At</th><th>Updated At</th></tr>';
+        users.forEach(user => {
+            output += `<tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.created_at}</td>
+                <td>${user.updated_at}</td>
+            </tr>`;
+        });
+        output += '</table>';
+        document.getElementById('sortOutput').innerHTML = output;
+    } catch (err) {
+        console.error('Error in sortUsers:', err);
+        alert(`Failed to apply sort: ${err.message}`);
+    }
+}
+
 async function reportClientError(errorMessage, source, line, column, stack) {
     const errorDetails = {
         message: errorMessage,

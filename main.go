@@ -534,6 +534,30 @@ func filterUsers(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func sortUsers(w http.ResponseWriter, r *http.Request) {
+	sortField := r.URL.Query().Get("field")
+	sortOrder := r.URL.Query().Get("order")
+
+	if sortField == "" {
+		sortField = "id"
+	}
+
+	if sortOrder != "asc" && sortOrder != "desc" {
+		sortOrder = "asc"
+	}
+
+	var users []User
+	query := db.Order(fmt.Sprintf("%s %s", sortField, sortOrder))
+
+	if err := query.Find(&users).Error; err != nil {
+		http.Error(w, fmt.Sprintf("Error sorting users: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}
+
 func mainPage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "main_page.html")
 }
@@ -553,6 +577,7 @@ func main() {
 	mux.HandleFunc("/log-error", logClientError)
 	mux.HandleFunc("/send-support-ticket", sendSupportTicket)
 	mux.HandleFunc("/filter", filterUsers)
+	mux.HandleFunc("/sort", sortUsers)
 	mux.HandleFunc("/create-product", createProduct)
 	mux.HandleFunc("/admin", admin)
 	mux.HandleFunc("/", mainPage)

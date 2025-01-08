@@ -35,8 +35,22 @@
         <button onclick="filterUsers()">Apply Filters</button>
     </div>
     <div id="filterOutput"></div>
-    
-
+    <div>
+        <label for="sortField">Sort by:</label>
+        <select id="sortField">
+            <option value="id">ID</option>
+            <option value="name">Name</option>
+            <option value="email">Email</option>
+            <option value="created_at">Created At</option>
+        </select>
+        <label for="sortOrder">Order:</label>
+        <select id="sortOrder">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+        <button onclick="sortUsers()">Apply Sort</button>
+    </div>
+    <div id="sortOutput"></div>    
     <script src="/static/myscripts.js"></script>
 </body>
 </html>

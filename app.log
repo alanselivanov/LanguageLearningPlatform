@@ -114,3 +114,5 @@
 {"action":"filterUsers","details":{"count":11,"filters":{"email":"user1","name":""}},"fields.time":"2025-01-09T01:26:07.151575+06:00","level":"info","msg":"User Action","status":"success","time":"2025-01-09T01:26:07+06:00"}
 {"action":"filterUsers","details":{"count":12,"filters":{"email":"user","name":"1"}},"fields.time":"2025-01-09T01:26:30.5816511+06:00","level":"info","msg":"User Action","status":"success","time":"2025-01-09T01:26:30+06:00"}
 {"action":"filterUsers","details":{"count":11,"filters":{"email":"user1","name":""}},"fields.time":"2025-01-09T01:28:27.3006366+06:00","level":"info","msg":"User Action","status":"success","time":"2025-01-09T01:28:27+06:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-09T01:39:09+06:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-09T01:39:09+06:00"}
