@@ -13,6 +13,7 @@ import (
 	"net/smtp"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -50,10 +51,19 @@ var (
 )
 
 func initLogger() {
+
+	logFile, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Printf("can't open the file for logs: %v\n", err)
+		os.Exit(1)
+	}
+
 	logger = logrus.New()
 	logger.SetFormatter(&logrus.JSONFormatter{})
-	logger.SetOutput(os.Stdout)
+	logger.SetOutput(logFile)
 	logger.SetLevel(logrus.DebugLevel)
+
+	logger.SetOutput(io.MultiWriter(os.Stdout, logFile))
 }
 
 func logUserAction(action, status string, details map[string]interface{}) {
@@ -192,13 +202,25 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
 	var users []User
-	if err := db.Find(&users).Error; err != nil {
+	pageStr := r.URL.Query().Get("page")
+	limit := 10
+	page := 1
+
+	if pageStr != "" {
+		if p, err := strconv.Atoi(pageStr); err == nil && p > 0 {
+			page = p
+		}
+	}
+
+	offset := (page - 1) * limit
+
+	if err := db.Limit(limit).Offset(offset).Find(&users).Error; err != nil {
 		handleError(w, "getUsers", fmt.Errorf("error retrieving users: %v", err), http.StatusInternalServerError)
 		return
 	}
 
 	json.NewEncoder(w).Encode(users)
-	logUserAction("getUsers", "success", map[string]interface{}{"count": len(users)})
+	logUserAction("getUsers", "success", map[string]interface{}{"page": page, "count": len(users)})
 }
 
 func getUserByID(w http.ResponseWriter, r *http.Request) {

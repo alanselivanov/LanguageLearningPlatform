@@ -49,10 +49,11 @@ async function createUser() {
 }
 
 
-async function getUsers() {
+let currentPage = 1;
 
+async function getUsers(page = 1) {
     try {
-        const response = await fetch('/read');
+        const response = await fetch(`/read?page=${page}`);
         if (!response.ok) throw new Error('Failed to fetch users.');
 
         const users = await response.json();
@@ -68,31 +69,26 @@ async function getUsers() {
             </tr>`;
         });
         output += '</table>';
+
+        output += `
+            <button onclick="changePage(-1)">Previous</button>
+            <button onclick="changePage(1)">Next</button>
+        `;
         document.getElementById('output').innerHTML = output;
+        currentPage = page;
     } catch (err) {
         console.error('Error in getUsers:', err);
-        await reportClientError(err.message, 'getUsers', null, null, err.stack || null);
         alert(`Failed to fetch users: ${err.message}`);
     }
-
-    const response = await fetch('/read');
-    const users = await response.json();
-    let output = '<table border="1"><tr><th>ID</th><th>Name</th><th>Email</th><th>Password</th><th>Role</th><th>Created At</th><th>Updated At</th></tr>';
-    users.forEach(user => {
-        output += `<tr>
-            <td>${user.id}</td>
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.password}</td>
-            <td>${user.role}</td>
-            <td>${user.created_at}</td>
-            <td>${user.updated_at}</td>
-        </tr>`;
-    });
-    output += '</table>';
-    document.getElementById('output').innerHTML = output;
-
 }
+
+function changePage(delta) {
+    const nextPage = currentPage + delta;
+    if (nextPage > 0) {
+        getUsers(nextPage);
+    }
+}
+
 
 async function updateUser() {
     try {
