@@ -192,7 +192,6 @@ async function loadSampleData() {
         const sampleData = [
             { name: "Product 1", description: "Description of Product 1", price: 100, characteristics: "Feature A", date: "2025-01-01", image: "image1.jpg" },
             { name: "Product 2", description: "Description of Product 2", price: 200, characteristics: "Feature B", date: "2025-01-02", image: "image2.jpg" },
-            // Добавьте еще минимум 28 объектов
         ];
 
         for (const item of sampleData) {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -380,30 +381,37 @@ func sendEmail(subject, body string, attachment io.Reader, fileHeader *multipart
 	}
 
 	to := []string{"alan4ik.selivanov@yandex.kz"}
-
 	var msg bytes.Buffer
+
+	boundary := "boundary-example"
 	msg.WriteString(fmt.Sprintf("From: %s\n", from))
 	msg.WriteString(fmt.Sprintf("To: %s\n", strings.Join(to, ", ")))
 	msg.WriteString(fmt.Sprintf("Subject: %s\n", subject))
 	msg.WriteString("MIME-Version: 1.0\n")
-	msg.WriteString("Content-Type: multipart/mixed; boundary=boundary\n")
-	msg.WriteString("--boundary\n")
+	msg.WriteString(fmt.Sprintf("Content-Type: multipart/mixed; boundary=%s\n", boundary))
+	msg.WriteString("\n")
+
+	msg.WriteString(fmt.Sprintf("--%s\n", boundary))
 	msg.WriteString("Content-Type: text/plain; charset=utf-8\n\n")
-	msg.WriteString(body + "\n")
+	msg.WriteString(body + "\n\n")
 
 	if attachment != nil && fileHeader != nil {
-		msg.WriteString("--boundary\n")
-		msg.WriteString(fmt.Sprintf("Content-Type: application/octet-stream\n"))
-		msg.WriteString(fmt.Sprintf("Content-Disposition: attachment; filename=\"%s\"\n\n", fileHeader.Filename))
-
 		fileContent, err := io.ReadAll(attachment)
 		if err != nil {
 			return fmt.Errorf("failed to read file content: %v", err)
 		}
-		msg.Write(fileContent)
-		msg.WriteString("\n")
+
+		encoded := base64.StdEncoding.EncodeToString(fileContent)
+
+		msg.WriteString(fmt.Sprintf("--%s\n", boundary))
+		msg.WriteString(fmt.Sprintf("Content-Type: %s\n", fileHeader.Header.Get("Content-Type")))
+		msg.WriteString(fmt.Sprintf("Content-Disposition: attachment; filename=\"%s\"\n", fileHeader.Filename))
+		msg.WriteString("Content-Transfer-Encoding: base64\n\n")
+		msg.WriteString(encoded)
+		msg.WriteString("\n\n")
 	}
-	msg.WriteString("--boundary--")
+
+	msg.WriteString(fmt.Sprintf("--%s--", boundary))
 
 	err := smtp.SendMail(smtpHost+":"+smtpPort, smtp.PlainAuth("", smtpUser, smtpPass, smtpHost), from, to, msg.Bytes())
 	if err != nil {
@@ -411,10 +419,6 @@ func sendEmail(subject, body string, attachment io.Reader, fileHeader *multipart
 	}
 
 	return nil
-}
-
-func mainPage(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "main_page.html")
 }
 
 func createProduct(w http.ResponseWriter, r *http.Request) {
@@ -456,6 +460,10 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newProduct)
 }
 
+func mainPage(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "main_page.html")
+}
+
 func main() {
 	initLogger()
 	initDB()
@@ -469,10 +477,10 @@ func main() {
 	mux.HandleFunc("/delete", deleteUser)
 	mux.HandleFunc("/log-error", logClientError)
 	mux.HandleFunc("/send-support-ticket", sendSupportTicket)
-
 	mux.HandleFunc("/create-product", createProduct)
 	mux.HandleFunc("/admin", admin)
 	mux.HandleFunc("/", mainPage)
+
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./"))))
 	logger.Info("Server started on :8080")
 	log.Fatal(http.ListenAndServe(":8080", rateLimiterMiddleware(mux)))
