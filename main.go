@@ -20,18 +20,21 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	Role      string    `json:"role"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID               uint      `json:"id" gorm:"primaryKey"`
+	Name             string    `json:"name"`
+	Email            string    `json:"email"`
+	Password         string    `json:"password"`
+	Role             string    `json:"role"`
+	ConfirmationCode string    `json:"confirmation_code"`
+	Confirmed        bool      `json:"confirmed"`
+	CreatedAt        time.Time `json:"created_at"`
+	UpdatedAt        time.Time `json:"updated_at"`
 }
 
 type Product struct {
@@ -187,11 +190,18 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		user.Role = "user"
 	}
 
+	user.ConfirmationCode = generateConfirmationCode()
+	user.Confirmed = false
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 
 	if err := db.Create(&user).Error; err != nil {
 		handleError(w, "createUser", fmt.Errorf("error creating user: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	if err := sendConfirmationEmail(user); err != nil {
+		handleError(w, "createUser", fmt.Errorf("failed to send confirmation email: %v", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -365,6 +375,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !user.Confirmed {
+		http.Error(w, "Account not confirmed. Please check your email for the confirmation link.", http.StatusForbidden)
+		return
+	}
+
 	if user.Password != loginData.Password {
 		http.Error(w, "Invalid password", http.StatusUnauthorized)
 		return
@@ -378,6 +393,41 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
+}
+
+func generateConfirmationCode() string {
+	return strconv.Itoa(time.Now().Nanosecond())
+}
+
+func sendConfirmationEmail(user User) error {
+	subject := "Подтверждение регистрации"
+	body := fmt.Sprintf("Здравствуйте, %s!\n\nПожалуйста, подтвердите вашу регистрацию, перейдя по ссылке: http://localhost:8080/confirm?code=%s", user.Name, user.ConfirmationCode)
+
+	return sendEmail(subject, body, nil, nil)
+}
+
+func confirmEmail(w http.ResponseWriter, r *http.Request) {
+	code := r.URL.Query().Get("code")
+	if code == "" {
+		handleError(w, "confirmEmail", errors.New("confirmation code is required"), http.StatusBadRequest)
+		return
+	}
+
+	var user User
+	if err := db.Where("confirmation_code = ?", code).First(&user).Error; err != nil {
+		handleError(w, "confirmEmail", fmt.Errorf("invalid confirmation code: %v", err), http.StatusNotFound)
+		return
+	}
+
+	user.Confirmed = true
+	user.ConfirmationCode = ""
+	if err := db.Save(&user).Error; err != nil {
+		handleError(w, "confirmEmail", fmt.Errorf("error confirming email: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]string{"message": "Email confirmed successfully"})
+	logUserAction("confirmEmail", "success", map[string]interface{}{"user_id": user.ID})
 }
 
 func sendSupportTicket(w http.ResponseWriter, r *http.Request) {
@@ -567,6 +617,7 @@ func main() {
 	initDB()
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("/confirm", confirmEmail)
 	mux.HandleFunc("/login", login)
 	mux.HandleFunc("/create", createUser)
 	mux.HandleFunc("/read", getUsers)

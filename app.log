@@ -116,3 +116,63 @@
 {"action":"filterUsers","details":{"count":11,"filters":{"email":"user1","name":""}},"fields.time":"2025-01-09T01:28:27.3006366+06:00","level":"info","msg":"User Action","status":"success","time":"2025-01-09T01:28:27+06:00"}
 {"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-09T01:39:09+06:00"}
 {"level":"info","msg":"Server started on :8080","time":"2025-01-09T01:39:09+06:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-17T17:54:34+06:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-17T17:54:34+06:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-19T19:48:15+06:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-19T19:48:15+06:00"}
+{"email":"alan.selivanov.mail@gmail.com","level":"info","msg":"Received createUser request","name":"Alan","password":"akuna0011","role":"","time":"2025-01-19T19:51:29+06:00"}
+{"action":"createUser","details":{"user_id":1},"fields.time":"2025-01-19T19:51:34.0307978+06:00","level":"info","msg":"User Action","status":"success","time":"2025-01-19T19:51:34+06:00"}
+{"action":"confirmEmail","details":{"user_id":1},"fields.time":"2025-01-19T19:52:37.5674195+06:00","level":"info","msg":"User Action","status":"success","time":"2025-01-19T19:52:37+06:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"LULA","password":"12345678","role":"user","time":"2025-01-19T19:59:15+06:00"}
+{"action":"createUser","details":{"user_id":2},"fields.time":"2025-01-19T19:59:19.5496684+06:00","level":"info","msg":"User Action","status":"success","time":"2025-01-19T19:59:19+06:00"}
+{"email":"Bono@gmail.com","level":"info","msg":"Received createUser request","name":"Almas","password":"hahahaha1","role":"","time":"2025-01-19T20:00:20+06:00"}
+{"action":"createUser","details":{"error":"invalid email format"},"fields.time":"2025-01-19T20:00:20.1875085+06:00","level":"error","msg":"User Action","status":"error","time":"2025-01-19T20:00:20+06:00"}
+{"email":"Bono@gmail.com","level":"info","msg":"Received createUser request","name":"Almas","password":"hahaha11","role":"","time":"2025-01-19T20:00:35+06:00"}
+{"action":"createUser","details":{"error":"invalid email format"},"fields.time":"2025-01-19T20:00:35.9550114+06:00","level":"error","msg":"User Action","status":"error","time":"2025-01-19T20:00:35+06:00"}
+{"email":"Bono@gmail.com","level":"info","msg":"Received createUser request","name":"Almas","password":"0987654321","role":"","time":"2025-01-19T20:00:50+06:00"}
+{"action":"createUser","details":{"error":"invalid email format"},"fields.time":"2025-01-19T20:00:50.9566452+06:00","level":"error","msg":"User Action","status":"error","time":"2025-01-19T20:00:50+06:00"}
+{"email":"Bono@gmail.com","level":"info","msg":"Received createUser request","name":"Bono","password":"0987654321","role":"","time":"2025-01-19T20:01:21+06:00"}
+{"action":"createUser","details":{"error":"invalid email format"},"fields.time":"2025-01-19T20:01:21.041751+06:00","level":"error","msg":"User Action","status":"error","time":"2025-01-19T20:01:21+06:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"Bono","password":"0987654321","role":"","time":"2025-01-19T20:01:27+06:00"}
+{"action":"createUser","details":{"user_id":3},"fields.time":"2025-01-19T20:01:30.3097816+06:00","level":"info","msg":"User Action","status":"success","time":"2025-01-19T20:01:30+06:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-21T18:22:58+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-21T18:22:58+05:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"Alan","password":"999999999","role":"","time":"2025-01-21T18:23:41+05:00"}
+{"action":"createUser","details":{"user_id":4},"fields.time":"2025-01-21T18:23:44.9909722+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-21T18:23:44+05:00"}
+{"action":"confirmEmail","details":{"user_id":4},"fields.time":"2025-01-21T18:24:21.0348166+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-21T18:24:21+05:00"}
+{"action":"confirmEmail","details":{"error":"invalid confirmation code: record not found"},"fields.time":"2025-01-21T18:33:28.536711+05:00","level":"error","msg":"User Action","status":"error","time":"2025-01-21T18:33:28+05:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"Khabib","password":"777777777","role":"","time":"2025-01-21T18:33:55+05:00"}
+{"action":"createUser","details":{"user_id":5},"fields.time":"2025-01-21T18:33:58.9993003+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-21T18:33:58+05:00"}
+{"action":"confirmEmail","details":{"user_id":5},"fields.time":"2025-01-21T18:35:37.8654882+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-21T18:35:37+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-22T14:00:54+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-22T14:00:54+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-22T17:28:51+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-22T17:28:51+05:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"Bruno","password":"66666666","role":"","time":"2025-01-22T17:30:46+05:00"}
+{"action":"createUser","details":{"user_id":6},"fields.time":"2025-01-22T17:30:51.7157337+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-22T17:30:51+05:00"}
+{"action":"confirmEmail","details":{"user_id":6},"fields.time":"2025-01-22T17:31:03.9802721+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-22T17:31:03+05:00"}
+{"action":"updateUser","details":{"user":{"id":6,"name":"Bruno","email":"alan4ik.selivanov@yandex.kz","password":"66666666","role":"","confirmation_code":"","confirmed":false,"created_at":"0001-01-01T00:00:00Z","updated_at":"2025-01-22T17:31:54.457638+05:00"}},"fields.time":"2025-01-22T17:31:54.4609334+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-22T17:31:54+05:00"}
+{"action":"updateUser","details":{"user":{"id":6,"name":"Bruno","email":"alan4ik.selivanov@yandex.kz","password":"66666666","role":"","confirmation_code":"","confirmed":false,"created_at":"0001-01-01T00:00:00Z","updated_at":"2025-01-22T17:32:04.678593+05:00"}},"fields.time":"2025-01-22T17:32:04.6810101+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-22T17:32:04+05:00"}
+{"action":"updateUser","details":{"user":{"id":6,"name":"Bruno","email":"alan4ik.selivanov@yandex.kz","password":"44444444","role":"","confirmation_code":"","confirmed":false,"created_at":"0001-01-01T00:00:00Z","updated_at":"2025-01-22T17:32:13.1437459+05:00"}},"fields.time":"2025-01-22T17:32:13.1472546+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-22T17:32:13+05:00"}
+{"action":"updateUser","details":{"user":{"id":6,"name":"Brunono","email":"alan4ik.selivanov@yandex.kz","password":"44444444","role":"admin","confirmation_code":"","confirmed":false,"created_at":"0001-01-01T00:00:00Z","updated_at":"2025-01-22T17:35:03.8066494+05:00"}},"fields.time":"2025-01-22T17:35:03.8100906+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-22T17:35:03+05:00"}
+{"action":"getUsers","details":{"count":6,"page":1},"fields.time":"2025-01-22T17:35:07.0782886+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-22T17:35:07+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-23T00:23:01+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-23T00:23:01+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-23T00:24:57+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-23T00:24:57+05:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"Dilyara","password":"333333333","role":"","time":"2025-01-23T00:25:55+05:00"}
+{"action":"createUser","details":{"error":"failed to send confirmation email: failed to send email: dial tcp: lookup smtp.gmail.com: no such host"},"fields.time":"2025-01-23T00:25:55.6497817+05:00","level":"error","msg":"User Action","status":"error","time":"2025-01-23T00:25:55+05:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"Dilyara","password":"333333333","role":"","time":"2025-01-23T00:26:15+05:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"Dilyara","password":"333333333","role":"","time":"2025-01-23T00:26:25+05:00"}
+{"action":"createUser","details":{"error":"failed to send confirmation email: failed to send email: dial tcp: lookup smtp.gmail.com: no such host"},"fields.time":"2025-01-23T00:26:27.1175286+05:00","level":"error","msg":"User Action","status":"error","time":"2025-01-23T00:26:27+05:00"}
+{"action":"createUser","details":{"error":"failed to send confirmation email: failed to send email: dial tcp: lookup smtp.gmail.com: no such host"},"fields.time":"2025-01-23T00:26:27.1175286+05:00","level":"error","msg":"User Action","status":"error","time":"2025-01-23T00:26:27+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-23T00:26:50+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-23T00:26:50+05:00"}
+{"email":"alan4ik.selivanov@yandex.kz","level":"info","msg":"Received createUser request","name":"Dilyara","password":"333333333","role":"","time":"2025-01-23T00:28:37+05:00"}
+{"action":"createUser","details":{"user_id":10},"fields.time":"2025-01-23T00:28:41.7398869+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-23T00:28:41+05:00"}
+{"action":"confirmEmail","details":{"user_id":10},"fields.time":"2025-01-23T00:29:17.0929574+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-23T00:29:17+05:00"}
+{"action":"getUsers","details":{"count":10,"page":1},"fields.time":"2025-01-23T00:30:19.2480131+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-23T00:30:19+05:00"}
+{"action":"deleteUser","details":{"id":7},"fields.time":"2025-01-23T00:30:48.9842351+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-23T00:30:48+05:00"}
+{"action":"deleteUser","details":{"id":8},"fields.time":"2025-01-23T00:30:57.8754776+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-23T00:30:57+05:00"}
+{"action":"deleteUser","details":{"id":9},"fields.time":"2025-01-23T00:31:01.9742761+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-23T00:31:01+05:00"}
+{"action":"getUsers","details":{"count":7,"page":1},"fields.time":"2025-01-23T00:31:04.9362507+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-23T00:31:04+05:00"}
