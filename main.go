@@ -48,7 +48,7 @@ type Product struct {
 }
 
 var (
-	db      *gorm.DB
+	Db      *gorm.DB
 	logger  *logrus.Logger
 	limiter = rate.NewLimiter(30, 60)
 )
@@ -119,7 +119,7 @@ func rateLimiterMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func initDB() {
+func InitDB() {
 	err := godotenv.Load()
 	if err != nil {
 		logger.Fatal("Error loading .env file")
@@ -132,12 +132,12 @@ func initDB() {
 	dbname := os.Getenv("DB_NAME")
 
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		logger.Fatal("Failed to connect to the database:", err)
 	}
 
-	err = db.AutoMigrate(&User{})
+	err = Db.AutoMigrate(&User{}, &Product{})
 	if err != nil {
 		logger.Fatal("Failed to migrate database:", err)
 	}
@@ -156,7 +156,7 @@ func handleError(w http.ResponseWriter, action string, err error, statusCode int
 	logUserAction(action, "error", map[string]interface{}{"error": err.Error()})
 }
 
-func createUser(w http.ResponseWriter, r *http.Request) {
+func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		handleError(w, "createUser", fmt.Errorf("invalid input data: %v", err), http.StatusBadRequest)
@@ -195,7 +195,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 
-	if err := db.Create(&user).Error; err != nil {
+	if err := Db.Create(&user).Error; err != nil {
 		handleError(w, "createUser", fmt.Errorf("error creating user: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -224,7 +224,7 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 
 	offset := (page - 1) * limit
 
-	if err := db.Limit(limit).Offset(offset).Find(&users).Error; err != nil {
+	if err := Db.Limit(limit).Offset(offset).Find(&users).Error; err != nil {
 		handleError(w, "getUsers", fmt.Errorf("error retrieving users: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -241,7 +241,7 @@ func getUserByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user User
-	if err := db.First(&user, id).Error; err != nil {
+	if err := Db.First(&user, id).Error; err != nil {
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			handleError(w, "getUserByID", fmt.Errorf("user not found: %v", err), http.StatusNotFound)
@@ -271,7 +271,7 @@ func getUserByIDProf(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user User
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+	if err := Db.Where("id = ?", id).First(&user).Error; err != nil {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
@@ -311,7 +311,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	user.UpdatedAt = time.Now()
 
-	if err := db.Model(&User{}).Where("id = ?", user.ID).Updates(user).Error; err != nil {
+	if err := Db.Model(&User{}).Where("id = ?", user.ID).Updates(user).Error; err != nil {
 		handleError(w, "updateUser", fmt.Errorf("error updating user: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -332,7 +332,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := db.Delete(&User{}, user.ID).Error; err != nil {
+	if err := Db.Delete(&User{}, user.ID).Error; err != nil {
 		handleError(w, "deleteUser", fmt.Errorf("error deleting user: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -370,7 +370,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user User
-	if err := db.Where("name = ?", loginData.Name).First(&user).Error; err != nil {
+	if err := Db.Where("name = ?", loginData.Name).First(&user).Error; err != nil {
 		http.Error(w, "User not found", http.StatusUnauthorized)
 		return
 	}
@@ -414,14 +414,14 @@ func confirmEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user User
-	if err := db.Where("confirmation_code = ?", code).First(&user).Error; err != nil {
+	if err := Db.Where("confirmation_code = ?", code).First(&user).Error; err != nil {
 		handleError(w, "confirmEmail", fmt.Errorf("invalid confirmation code: %v", err), http.StatusNotFound)
 		return
 	}
 
 	user.Confirmed = true
 	user.ConfirmationCode = ""
-	if err := db.Save(&user).Error; err != nil {
+	if err := Db.Save(&user).Error; err != nil {
 		handleError(w, "confirmEmail", fmt.Errorf("error confirming email: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -474,7 +474,7 @@ func sendEmail(subject, body string, attachment io.Reader, fileHeader *multipart
 		return fmt.Errorf("SMTP configuration is missing. Check environment variables")
 	}
 
-	to := []string{"alan4ik.selivanov@yandex.kz"}
+	to := []string{"husainovalmas05@gmail.com"}
 	var msg bytes.Buffer
 
 	boundary := "boundary-example"
@@ -545,7 +545,7 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 		Image:           product.Image,
 	}
 
-	if err := db.Create(&newProduct).Error; err != nil {
+	if err := Db.Create(&newProduct).Error; err != nil {
 		http.Error(w, "Failed to save product", http.StatusInternalServerError)
 		return
 	}
@@ -559,7 +559,7 @@ func filterUsers(w http.ResponseWriter, r *http.Request) {
 	email := r.URL.Query().Get("email")
 
 	var users []User
-	query := db.Model(&User{})
+	query := Db.Model(&User{})
 
 	if name != "" {
 		query = query.Where("name ILIKE ?", "%"+name+"%")
@@ -597,7 +597,7 @@ func sortUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var users []User
-	query := db.Order(fmt.Sprintf("%s %s", sortField, sortOrder))
+	query := Db.Order(fmt.Sprintf("%s %s", sortField, sortOrder))
 
 	if err := query.Find(&users).Error; err != nil {
 		http.Error(w, fmt.Sprintf("Error sorting users: %v", err), http.StatusInternalServerError)
@@ -614,12 +614,12 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	initLogger()
-	initDB()
+	InitDB()
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/confirm", confirmEmail)
 	mux.HandleFunc("/login", login)
-	mux.HandleFunc("/create", createUser)
+	mux.HandleFunc("/create", CreateUser)
 	mux.HandleFunc("/read", getUsers)
 	mux.HandleFunc("/readByID", getUserByID)
 	mux.HandleFunc("/readByIDprof", getUserByIDProf)
