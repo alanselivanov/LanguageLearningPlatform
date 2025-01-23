@@ -403,7 +403,7 @@ func sendConfirmationEmail(user User) error {
 	subject := "Подтверждение регистрации"
 	body := fmt.Sprintf("Здравствуйте, %s!\n\nПожалуйста, подтвердите вашу регистрацию, перейдя по ссылке: http://localhost:8080/confirm?code=%s", user.Name, user.ConfirmationCode)
 
-	return sendEmail(subject, body, nil, nil)
+	return sendEmail(subject, body, []string{user.Email}, nil)
 }
 
 func confirmEmail(w http.ResponseWriter, r *http.Request) {
@@ -454,7 +454,7 @@ func sendSupportTicket(w http.ResponseWriter, r *http.Request) {
 	subject := "Support Ticket from " + name
 	body := fmt.Sprintf("Name: %s\nEmail: %s\n\nMessage: %s", name, email, message)
 
-	if err := sendEmail(subject, body, file, fileHeader); err != nil {
+	if err := sendEmailToSupport(subject, body, file, fileHeader); err != nil {
 		http.Error(w, "Failed to send email: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -463,7 +463,7 @@ func sendSupportTicket(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Ticket submitted successfully!")
 }
 
-func sendEmail(subject, body string, attachment io.Reader, fileHeader *multipart.FileHeader) error {
+func sendEmailToSupport(subject, body string, attachment io.Reader, fileHeader *multipart.FileHeader) error {
 	smtpUser := os.Getenv("SMTP_USER")
 	smtpPass := os.Getenv("SMTP_PASS")
 	smtpHost := os.Getenv("SMTP_HOST")
@@ -474,7 +474,7 @@ func sendEmail(subject, body string, attachment io.Reader, fileHeader *multipart
 		return fmt.Errorf("SMTP configuration is missing. Check environment variables")
 	}
 
-	to := []string{"husainovalmas05@gmail.com"}
+	to := []string{"alan4ik.selivanov@yandex.kz"}
 	var msg bytes.Buffer
 
 	boundary := "boundary-example"
@@ -515,6 +515,36 @@ func sendEmail(subject, body string, attachment io.Reader, fileHeader *multipart
 	return nil
 }
 
+func sendEmail(subject, body string, to []string, cc []string) error {
+	smtpUser := os.Getenv("SMTP_USER")
+	smtpPass := os.Getenv("SMTP_PASS")
+	smtpHost := os.Getenv("SMTP_HOST")
+	smtpPort := os.Getenv("SMTP_PORT")
+	headers := make(map[string]string)
+	headers["From"] = smtpUser
+	headers["To"] = to[0]
+	headers["Subject"] = subject
+
+	if len(cc) > 0 {
+		headers["Cc"] = cc[0]
+	}
+
+	message := ""
+	for k, v := range headers {
+		message += fmt.Sprintf("%s: %s\r\n", k, v)
+	}
+	message += "\r\n" + body
+
+	auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
+
+	return smtp.SendMail(
+		fmt.Sprintf("%s:%s", smtpHost, smtpPort),
+		auth,
+		smtpUser,
+		to,
+		[]byte(message),
+	)
+}
 func createProduct(w http.ResponseWriter, r *http.Request) {
 	var product struct {
 		Name            string  `json:"name"`
