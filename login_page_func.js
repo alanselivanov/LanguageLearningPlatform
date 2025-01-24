@@ -15,8 +15,14 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             const data = await response.json();
             
+            console.log("Login response data:", data);
+
+            localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify({ id: data.id, name: data.name, role: data.role }));
-            console.log(localStorage.getItem('user'))
+
+            console.log('alalalalalalala', localStorage.getItem('token'));
+            console.log('alalalalalalala', localStorage.getItem('user'));
+            
             if (data.role === 'admin') {
                 window.location.href = '/static/index.html';
             } else {

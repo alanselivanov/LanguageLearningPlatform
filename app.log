@@ -186,3 +186,73 @@
 {"email":"alan.selivanov.mail@gmail.com","level":"info","msg":"Received createUser request","name":"Brauni","password":"555555555","role":"","time":"2025-01-24T02:10:26+05:00"}
 {"action":"createUser","details":{"user_id":13},"fields.time":"2025-01-24T02:10:28.4260086+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-24T02:10:28+05:00"}
 {"action":"confirmEmail","details":{"user_id":13},"fields.time":"2025-01-24T02:10:54.8282446+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-24T02:10:54+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T13:20:15+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T13:20:15+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T15:57:56+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T15:57:56+05:00"}
+{"email":"alan.selivanov.mail@gmail.com","level":"info","msg":"Received createUser request","name":"Elton","password":"123123123","role":"","time":"2025-01-24T16:00:05+05:00"}
+{"action":"createUser","details":{"user_id":14},"fields.time":"2025-01-24T16:00:10.2127799+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-24T16:00:10+05:00"}
+{"action":"confirmEmail","details":{"user_id":14},"fields.time":"2025-01-24T16:00:20.6444286+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-24T16:00:20+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:04:31+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:04:31+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:16:55+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:16:55+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:18:09+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:18:10+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:22:43+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:22:43+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:29:22+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:29:22+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:36:07+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:36:07+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:37:24+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:37:24+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:40:00+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:40:00+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:40:31+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:40:31+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:41:27+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:41:27+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:42:18+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:42:18+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:48:43+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:48:43+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:51:00+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:51:00+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:51:23+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:51:23+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:52:55+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:52:55+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:53:53+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:53:53+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T16:55:39+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T16:55:39+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:00:14+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:00:14+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:07:49+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:07:49+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:13:27+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:13:27+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:18:35+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:18:35+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:19:55+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:19:55+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:22:48+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:22:49+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:26:21+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:26:21+05:00"}
+{"action":"updateUser","details":{"user":{"id":14,"name":"Elton","email":"alan.selivanov.mail@gmail.com","password":"123123123","role":"","confirmation_code":"","confirmed":false,"created_at":"0001-01-01T00:00:00Z","updated_at":"2025-01-24T17:28:53.2638916+05:00"}},"fields.time":"2025-01-24T17:28:53.2681501+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-24T17:28:53+05:00"}
+{"action":"updateUser","details":{"user":{"id":14,"name":"Eltonho","email":"alan.selivanov.mail@gmail.com","password":"123123123","role":"","confirmation_code":"","confirmed":false,"created_at":"0001-01-01T00:00:00Z","updated_at":"2025-01-24T17:29:02.3316533+05:00"}},"fields.time":"2025-01-24T17:29:02.3349357+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-24T17:29:02+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:38:13+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:38:13+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:52:56+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:52:56+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T17:54:35+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T17:54:35+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T18:23:39+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T18:23:39+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T18:27:56+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T18:27:56+05:00"}
+{"level":"info","msg":"Database connected and migrated successfully!","time":"2025-01-24T18:31:10+05:00"}
+{"level":"info","msg":"Server started on :8080","time":"2025-01-24T18:31:10+05:00"}
+{"action":"updateUser","details":{"user":{"id":14,"name":"Eltonhok","email":"alan.selivanov.mail@gmail.com","password":"123123123","role":"","confirmation_code":"","confirmed":false,"created_at":"0001-01-01T00:00:00Z","updated_at":"2025-01-24T18:31:48.063005+05:00"}},"fields.time":"2025-01-24T18:31:48.0656165+05:00","level":"info","msg":"User Action","status":"success","time":"2025-01-24T18:31:48+05:00"}

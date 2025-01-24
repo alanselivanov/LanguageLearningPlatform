@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) {
+
+    if (!token || !user) {
         alert('You need to log in first.');
         window.location.href = '/';
         return;
@@ -12,14 +14,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const passwordField = document.getElementById('password');
 
     try {
-        const response = await fetch(`/readByIDprof?id=${user.id}`);
+        const response = await fetch(`/readByIDprof?id=${user.id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
         if (response.ok) {
             const data = await response.json();
             usernameField.value = data.name;
             emailField.value = data.email;
             passwordField.value = data.password;
         } else {
-            alert('Failed to load profile data.');
+            if (response.status === 401) {
+                alert('Session expired. Please log in again.');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/';
+            } else {
+                alert('Failed to load profile data.');
+            }
         }
     } catch (error) {
         console.error('Error fetching profile data:', error);
@@ -39,10 +52,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(updatedData),
             });
-            
+
             if (response.ok) {
                 alert('Profile updated successfully!');
             } else {
@@ -55,6 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const logoutButton = document.getElementById('logoutButton');
     logoutButton.addEventListener('click', () => {
+        localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/';
     });

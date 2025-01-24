@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
@@ -48,6 +49,7 @@ type Product struct {
 }
 
 var (
+	jwtKey  []byte
 	Db      *gorm.DB
 	logger  *logrus.Logger
 	limiter = rate.NewLimiter(30, 60)
@@ -124,7 +126,8 @@ func InitDB() {
 	if err != nil {
 		logger.Fatal("Error loading .env file")
 	}
-
+	jwtKey = []byte(os.Getenv("JWT_SECRET"))
+	fmt.Println("Initialized jwtKey:", jwtKey)
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
@@ -358,6 +361,17 @@ func admin(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, filePath)
 	logUserAction("serveIndex", "success", map[string]interface{}{"path": r.URL.Path})
 }
+func generateJWT(user User) (string, error) {
+	log.Println("key0:", jwtKey)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":   user.ID,
+		"name": user.Name,
+		"role": user.Role,
+		"exp":  time.Now().Add(time.Hour * 24).Unix(),
+	})
+
+	return token.SignedString(jwtKey)
+}
 func login(w http.ResponseWriter, r *http.Request) {
 	var loginData struct {
 		Name     string `json:"name"`
@@ -376,7 +390,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !user.Confirmed {
-		http.Error(w, "Account not confirmed. Please check your email for the confirmation link.", http.StatusForbidden)
+		http.Error(w, "Account not confirmed. Please check your email.", http.StatusForbidden)
 		return
 	}
 
@@ -385,14 +399,50 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token, err := generateJWT(user)
+	if err != nil {
+		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
+		return
+	}
+
 	response := map[string]interface{}{
 		"message": "Login successful",
+		"token":   token,
+		"name":    user.Name,
 		"role":    user.Role,
 		"id":      user.ID,
 	}
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
+}
+
+func authMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenStr := r.Header.Get("Authorization")
+		log.Println("key:", jwtKey)
+		log.Println("Authorization Header:", tokenStr)
+		if tokenStr == "" {
+			http.Error(w, "Authorization header is required", http.StatusUnauthorized)
+			return
+		}
+		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
+		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				log.Println("Sign error")
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+			return jwtKey, nil
+		})
+		log.Println(token)
+		if err != nil || !token.Valid {
+			log.Println("invalid token")
+			http.Error(w, "Invalid token", http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func generateConfirmationCode() string {
@@ -652,8 +702,8 @@ func main() {
 	mux.HandleFunc("/create", CreateUser)
 	mux.HandleFunc("/read", getUsers)
 	mux.HandleFunc("/readByID", getUserByID)
-	mux.HandleFunc("/readByIDprof", getUserByIDProf)
-	mux.HandleFunc("/update", updateUser)
+	mux.Handle("/readByIDprof", authMiddleware(http.HandlerFunc(getUserByIDProf)))
+	mux.Handle("/update", authMiddleware(http.HandlerFunc(updateUser)))
 	mux.HandleFunc("/delete", deleteUser)
 	mux.HandleFunc("/log-error", logClientError)
 	mux.HandleFunc("/send-support-ticket", sendSupportTicket)
