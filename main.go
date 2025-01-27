@@ -127,7 +127,6 @@ func InitDB() {
 		logger.Fatal("Error loading .env file")
 	}
 	jwtKey = []byte(os.Getenv("JWT_SECRET"))
-	fmt.Println("Initialized jwtKey:", jwtKey)
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
@@ -345,24 +344,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 	logUserAction("deleteUser", "success", map[string]interface{}{"id": user.ID})
 }
 
-func admin(w http.ResponseWriter, r *http.Request) {
-	defer func() {
-		if err := recover(); err != nil {
-			handleError(w, "serveIndex", fmt.Errorf("failed to serve index.html: %v", err), http.StatusInternalServerError)
-		}
-	}()
-
-	filePath := "index.html"
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		handleError(w, "serveIndex", fmt.Errorf("file not found: %s", filePath), http.StatusNotFound)
-		return
-	}
-
-	http.ServeFile(w, r, filePath)
-	logUserAction("serveIndex", "success", map[string]interface{}{"path": r.URL.Path})
-}
 func generateJWT(user User) (string, error) {
-	log.Println("key0:", jwtKey)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":   user.ID,
 		"name": user.Name,
@@ -420,8 +402,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 func authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenStr := r.Header.Get("Authorization")
-		log.Println("key:", jwtKey)
-		log.Println("Authorization Header:", tokenStr)
 		if tokenStr == "" {
 			http.Error(w, "Authorization header is required", http.StatusUnauthorized)
 			return
@@ -429,14 +409,11 @@ func authMiddleware(next http.Handler) http.Handler {
 		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
 		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				log.Println("Sign error")
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
 			return jwtKey, nil
 		})
-		log.Println(token)
 		if err != nil || !token.Valid {
-			log.Println("invalid token")
 			http.Error(w, "Invalid token", http.StatusUnauthorized)
 			return
 		}
@@ -687,11 +664,21 @@ func sortUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(users)
 }
-
+func loginPage(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "login_page.html")
+}
+func signupPage(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "signup_page.html")
+}
 func mainPage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "main_page.html")
 }
-
+func adminPanel(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "adminPanel.html")
+}
+func profilePage(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "profile_page.html")
+}
 func main() {
 	initLogger()
 	InitDB()
@@ -710,10 +697,13 @@ func main() {
 	mux.HandleFunc("/filter", filterUsers)
 	mux.HandleFunc("/sort", sortUsers)
 	mux.HandleFunc("/create-product", createProduct)
-	mux.HandleFunc("/admin", admin)
+	mux.HandleFunc("/static/loginPage", loginPage)
+	mux.HandleFunc("/static/signupPage", signupPage)
+	mux.HandleFunc("/adminPanel", adminPanel)
+	mux.HandleFunc("/profilePage", profilePage)
 	mux.HandleFunc("/", mainPage)
 
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./"))))
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	logger.Info("Server started on :8080")
 	log.Fatal(http.ListenAndServe(":8080", rateLimiterMiddleware(mux)))
 

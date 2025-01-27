@@ -37,23 +37,23 @@ window.onload = function() {
         document.getElementById('login-btn').onclick = function(e) {
             e.preventDefault(); 
             localStorage.removeItem('user');
-            window.location.href = '/static/login_page.html';
+            window.location.href = '/static/loginPage';
         };
 
         document.getElementById('profile-btn').onclick = function(e) {
             e.preventDefault();
-            window.location.href = '/static/profile_page.html';
+            window.location.href = '/profilePage';
         };
     } else {
         document.getElementById('login-btn').innerText = 'Login';
         document.getElementById('profile-btn').innerText = 'Sign-up';
 
         document.getElementById('login-btn').onclick = function() {
-            window.location.href = '/static/login_page.html';
+            window.location.href = '/static/loginPage';
         };
 
         document.getElementById('profile-btn').onclick = function() {
-            window.location.href = '/static/signup_page.html';
+            window.location.href = '/static/signupPage';
         };
     }
 };
