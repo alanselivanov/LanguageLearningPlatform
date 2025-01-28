@@ -125,9 +125,10 @@ async function updateUser() {
         },
         body: JSON.stringify({ id: parseInt(id), name, email, password, role }),
     });
-
+    if (response.ok){
         const result = await response.json();
         alert(`User updated successfully: ${JSON.stringify(result)}`);
+    }
     } catch (err) {
         console.error('Error in updateUser:', err);
         await reportClientError(err.message, 'updateUser', null, null, err.stack || null);
