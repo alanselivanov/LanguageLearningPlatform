@@ -2,17 +2,20 @@ document.getElementById('supportForm').addEventListener('submit', async function
     e.preventDefault();
 
     const user = JSON.parse(localStorage.getItem('user')); 
-
-    if (!user) { 
-        alert('Error: You must be logged in to submit a file!');
-        return; 
-    }
+    const token = localStorage.getItem('token');
+    //if (!user) { 
+        //alert('Error: You must be logged in to submit a file!');
+        //return; 
+    //}
 
     const formData = new FormData(this);
 
     try {
         const response = await fetch('/send-support-ticket', {
             method: 'POST',
+            headers:{
+                'Authorization': `Bearer ${token}`,
+            },
             body: formData
         });
 
@@ -36,8 +39,9 @@ window.onload = function() {
 
         document.getElementById('login-btn').onclick = function(e) {
             e.preventDefault(); 
+            localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/static/loginPage';
+            window.location.href = '/';
         };
 
         document.getElementById('profile-btn').onclick = function(e) {

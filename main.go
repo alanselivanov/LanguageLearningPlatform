@@ -422,6 +422,43 @@ func authMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func adminMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenStr := r.Header.Get("Authorization")
+		if tokenStr == "" {
+			http.Error(w, "Authorization header is required", http.StatusUnauthorized)
+			return
+		}
+		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
+
+		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+			return jwtKey, nil
+		})
+
+		if err != nil || !token.Valid {
+			http.Error(w, "Invalid token", http.StatusUnauthorized)
+			return
+		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || !token.Valid {
+			http.Error(w, "Invalid token claims", http.StatusUnauthorized)
+			return
+		}
+
+		role, ok := claims["role"].(string)
+		if !ok || role != "admin" {
+			http.Error(w, "Access denied: Admins only", http.StatusForbidden)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func generateConfirmationCode() string {
 	return strconv.Itoa(time.Now().Nanosecond())
 }
@@ -687,16 +724,16 @@ func main() {
 	mux.HandleFunc("/confirm", confirmEmail)
 	mux.HandleFunc("/login", login)
 	mux.HandleFunc("/create", CreateUser)
-	mux.HandleFunc("/read", getUsers)
-	mux.HandleFunc("/readByID", getUserByID)
+	mux.Handle("/read", adminMiddleware(http.HandlerFunc(getUsers)))
+	mux.Handle("/readByID", adminMiddleware(http.HandlerFunc(getUserByID)))
 	mux.Handle("/readByIDprof", authMiddleware(http.HandlerFunc(getUserByIDProf)))
 	mux.Handle("/update", authMiddleware(http.HandlerFunc(updateUser)))
-	mux.HandleFunc("/delete", deleteUser)
-	mux.HandleFunc("/log-error", logClientError)
-	mux.HandleFunc("/send-support-ticket", sendSupportTicket)
-	mux.HandleFunc("/filter", filterUsers)
-	mux.HandleFunc("/sort", sortUsers)
-	mux.HandleFunc("/create-product", createProduct)
+	mux.Handle("/delete", adminMiddleware(http.HandlerFunc(deleteUser)))
+	mux.Handle("/log-error", adminMiddleware(http.HandlerFunc(logClientError)))
+	mux.Handle("/send-support-ticket", authMiddleware(http.HandlerFunc(sendSupportTicket)))
+	mux.Handle("/filter", adminMiddleware(http.HandlerFunc(filterUsers)))
+	mux.Handle("/sort", adminMiddleware(http.HandlerFunc(sortUsers)))
+	mux.Handle("/create-product", adminMiddleware(http.HandlerFunc(createProduct)))
 	mux.HandleFunc("/static/loginPage", loginPage)
 	mux.HandleFunc("/static/signupPage", signupPage)
 	mux.HandleFunc("/adminPanel", adminPanel)

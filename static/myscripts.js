@@ -53,7 +53,12 @@ let currentPage = 1;
 
 async function getUsers(page = 1) {
     try {
-        const response = await fetch(`/read?page=${page}`);
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/read?page=${page}`,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
         if (!response.ok) throw new Error('Failed to fetch users.');
 
         const users = await response.json();
@@ -104,8 +109,7 @@ async function updateUser() {
         const password = prompt('Enter new password (leave blank to keep current):');
         if (password && password.length < 6) throw new Error('Password must be at least 6 characters long.');
 
-
-        
+        const token = localStorage.getItem('token');
 
     const role = prompt('Enter new role (user/admin, leave blank to keep current):');
     if (role && (role !== "user" && role !== "admin")) {
@@ -115,7 +119,10 @@ async function updateUser() {
 
     const response = await fetch('/update', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({ id: parseInt(id), name, email, password, role }),
     });
 
@@ -130,12 +137,16 @@ async function updateUser() {
 
 async function deleteUser() {
     try {
+        const token = localStorage.getItem('token');
         const id = prompt('Enter User ID to delete:');
         if (!id || isNaN(id) || parseInt(id) <= 0) throw new Error('Invalid User ID. Please enter a positive number.');
 
         const response = await fetch('/delete', {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
             body: JSON.stringify({ id: parseInt(id) }),
         });
 
@@ -156,9 +167,14 @@ async function deleteUser() {
 async function getUserByID() {
     try {
         const id = document.getElementById('userID').value;
+        const token = localStorage.getItem('token');
         if (!id) throw new Error('Please enter a User ID.');
 
-        const response = await fetch(`/readByID?id=${id}`);
+        const response = await fetch(`/readByID?id=${id}`,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
         if (!response.ok) {
             const error = await response.text();
             throw new Error(`Error fetching user: ${error}`);
@@ -185,6 +201,7 @@ async function getUserByID() {
 }
 async function loadSampleData() {
     try {
+        const token = localStorage.getItem('token');
         const sampleData = [
             { name: "Product 1", description: "Description of Product 1", price: 100, characteristics: "Feature A", date: "2025-01-01", image: "image1.jpg" },
             { name: "Product 2", description: "Description of Product 2", price: 200, characteristics: "Feature B", date: "2025-01-02", image: "image2.jpg" },
@@ -193,7 +210,10 @@ async function loadSampleData() {
         for (const item of sampleData) {
             const response = await fetch('/create-product', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
                 body: JSON.stringify(item),
             });
 
@@ -274,11 +294,16 @@ async function filterUsers() {
     const email = document.getElementById('filterEmail').value.trim();
 
     try {
+        const token = localStorage.getItem('token');
         const params = new URLSearchParams();
         if (name) params.append("name", name);
         if (email) params.append("email", email);
 
-        const response = await fetch(`/filter?${params.toString()}`);
+        const response = await fetch(`/filter?${params.toString()}`,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
         if (!response.ok) throw new Error('Failed to fetch filtered users.');
 
         const users = await response.json();
@@ -301,6 +326,7 @@ async function filterUsers() {
 }
 
 async function sortUsers() {
+    const token = localStorage.getItem('token');
     const sortField = document.getElementById('sortField').value;
     const sortOrder = document.getElementById('sortOrder').value;
 
@@ -309,7 +335,11 @@ async function sortUsers() {
         params.append("field", sortField);
         params.append("order", sortOrder);
 
-        const response = await fetch(`/sort?${params.toString()}`);
+        const response = await fetch(`/sort?${params.toString()}`,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
         if (!response.ok) throw new Error('Failed to fetch sorted users.');
 
         const users = await response.json();
@@ -332,6 +362,7 @@ async function sortUsers() {
 }
 
 async function reportClientError(errorMessage, source, line, column, stack) {
+    const token = localStorage.getItem('token');
     const errorDetails = {
         message: errorMessage,
         source: source || 'N/A',
@@ -350,7 +381,10 @@ async function reportClientError(errorMessage, source, line, column, stack) {
     try {
         const response = await fetch('http://localhost:8080/log-error', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
             body: JSON.stringify(logPayload),
         });
 
